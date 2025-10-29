@@ -1,0 +1,15 @@
+# CS5510 Homework 1 - Requirements
+# Python 3.7+
+
+# Core dependencies
+numpy>=1.21.0
+pandas>=1.3.0
+matplotlib>=3.4.0
+
+# Optional: CPLEX for optimal reconstruction (requires IBM CPLEX installation)
+# docplex>=2.23.0
+
+# Note: If CPLEX is not available, the code will automatically fall back to
+# least-squares reconstruction which still works well for this assignment.
+
+
