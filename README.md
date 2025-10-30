@@ -121,7 +121,7 @@ defended_answer = (answer_on_sample) × (n / t)
 | 5 | 5.02 | 0.524 | Attack fails |
 | 6 | 5.88 | 0.519 | Attack fails |
 | 8 | 8.11 | 0.519 | Attack fails |
-| 10 | 10.01 | 0.512 | Attack fails |
+| 10 | 10.34 | 0.526 | Attack fails |
 
 **Key Finding:** Noise defense is the most effective, transitioning at **σ = 2** with success dropping to 59.8%, below the majority baseline (0.650). The defense shows a very sharp phase transition - even minimal noise (σ=2) significantly degrades attack performance. This is the strongest defense among the three tested.
 
@@ -136,17 +136,17 @@ defended_answer = (answer_on_sample) × (n / t)
 
 | Parameter t | RMSE | Success Rate | Status |
 |------------|------|--------------|--------|
-| 1 | 22.42 | 0.655 | Attack succeeds (high variance) |
-| 5 | 8.65 | 0.658 | Attack succeeds |
-| 10 | 6.90 | 0.681 | Attack succeeds |
-| 20 | 4.85 | 0.716 | Attack succeeds |
-| 50 | 2.05 | 0.801 | Attack succeeds |
-| 75 | 1.10 | 0.883 | Attack succeeds |
-| 90 | 0.67 | 0.929 | Attack succeeds |
-| 95 | 0.53 | 0.950 | Attack succeeds |
-| **100** | **0.00** | **0.962** | **No transition** |
+| 1 | 21.88 | 0.647 | Attack fails (high variance) |
+| 6 | 12.89 | 0.556 | Attack fails |
+| 11 | 10.09 | 0.576 | Attack fails |
+| 21 | 6.72 | 0.593 | Attack fails |
+| 51 | 3.58 | 0.740 | Attack succeeds |
+| 71 | 2.35 | 0.824 | Attack succeeds |
+| 81 | 1.71 | 0.876 | Attack succeeds |
+| 91 | 1.00 | 0.944 | Attack succeeds |
+| **96** | **0.72** | **0.975** | **Attack succeeds** |
 
-**Key Finding:** Subsampling is by far the weakest defense - it **never prevents the attack** even at maximum subsample size (t=100). The success rate continues to increase as t increases, reaching 96.2% at t=100 (nearly identical to the undefended case). This defense provides virtually no privacy protection unless t is extremely small (t ≤ 1), which would make the data completely unusable due to massive variance.
+**Key Finding:** Subsampling exhibits a **paradoxical privacy-utility trade-off**. Small t values (t ≤ 21) DO prevent the attack (success rates 55.6%-64.7%, below the 65% baseline), but introduce catastrophic variance (RMSE 6.72-21.88), making the data practically unusable. As t increases, utility improves dramatically but privacy protection vanishes (97.5% success at t=96). Unlike rounding and noise, **subsampling cannot achieve both meaningful privacy and acceptable utility simultaneously** at any parameter value.
 
 **Visualizations:**
 
@@ -158,19 +158,19 @@ defended_answer = (answer_on_sample) × (n / t)
 ### Comparative Analysis
 
 **Defense Effectiveness Ranking:**
-1. **Gaussian Noise** (σ*=2): Strongest protection, success drops to 59.8% (below baseline)
-2. **Rounding** (R*=5): Moderate protection, success drops to 60.6% (below baseline)
-3. **Subsampling** (t*=100): Effectively no protection, attack succeeds at 96.2% even at maximum t
+1. **Gaussian Noise** (σ*=2): Strongest protection with best trade-off, success drops to 59.8%, RMSE = 1.99
+2. **Rounding** (R*=5): Moderate protection with excellent utility, success drops to 60.6%, RMSE = 1.20
+3. **Subsampling**: Can provide protection (t ≤ 21: success 55.6%-64.7% below baseline) but at catastrophic utility cost (RMSE 6.72-21.88). No practical parameter achieves both privacy and utility
 
 **Privacy-Utility Trade-offs:**
-- **Rounding**: Discrete steps in both RMSE and success; predictable degradation; transition at R=5
-- **Noise**: Linear RMSE growth; sharp privacy transition at σ=2; best privacy-to-utility ratio
-- **Subsampling**: Fundamentally flawed - provides virtually no privacy protection at any practical parameter value
+- **Rounding**: Discrete steps in both RMSE and success; predictable degradation; transition at R=5 with RMSE=1.20
+- **Noise**: Linear RMSE growth; sharp privacy transition at σ=2; best privacy-to-utility ratio (RMSE=1.99)
+- **Subsampling**: Poor trade-off where privacy and utility cannot both be achieved. Privacy requires t ≤ 21 (RMSE > 6), utility requires t > 50 (success > 74%)
 
 **Practical Implications:**
 - **Recommended**: Use Gaussian noise with σ ≥ 2 for effective privacy with minimal utility loss (RMSE ≈ 2.0)
-- **Alternative**: Use rounding with R ≥ 5 for deterministic answers (RMSE ≈ 1.2)
-- **Avoid**: Subsampling alone is completely insufficient for privacy protection and should not be used as a standalone defense
+- **Alternative**: Use rounding with R ≥ 5 for deterministic answers with slightly better utility (RMSE ≈ 1.2)
+- **Avoid**: Do not use subsampling as a standalone defense. While it can technically prevent attacks at small t, the utility cost (RMSE > 6) makes the data practically unusable
 
 ---
 
