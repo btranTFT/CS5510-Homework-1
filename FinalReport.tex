@@ -59,7 +59,7 @@
     \vspace{0.5cm}
     \begin{minipage}{0.8\textwidth}
         \small
-        This report investigates reconstruction attacks on sensitive healthcare data and evaluates three defense mechanisms: rounding, Gaussian noise, and subsampling. Using a synthetic dataset of 100 patient records, we demonstrate that reconstruction attacks can achieve 96.7\% accuracy with 200 queries when no defenses are employed. Our experimental analysis reveals that Gaussian noise provides the strongest protection with the best privacy-utility trade-off, transitioning at $\sigma = 2$. Rounding offers moderate protection at $R = 5$, while subsampling proves ineffective as a standalone defense. Additionally, we provide a Bayesian interpretation of Membership Inference Attacks, highlighting the critical importance of minimizing false positive rates for reliable inference.
+        This report investigates reconstruction attacks on sensitive healthcare data and evaluates three defense mechanisms: rounding, Gaussian noise, and subsampling. Using a synthetic dataset of 100 patient records, we demonstrate that reconstruction attacks can achieve 96.7\% accuracy with 200 queries when no defenses are employed. Our experimental analysis reveals that Gaussian noise provides the strongest protection with the best privacy-utility trade-off, transitioning at $\sigma = 2$. Rounding offers moderate protection at $R = 5$, while subsampling proves completely ineffective, failing to prevent attacks at any parameter setting. Additionally, we provide a Bayesian interpretation of Membership Inference Attacks, highlighting the critical importance of minimizing false positive rates for reliable inference.
     \end{minipage}
     
     \vfill
@@ -70,7 +70,7 @@
 
 \section{Introduction}
 
-The proliferation of data-driven healthcare systems has created unprecedented opportunities for medical research and personalized treatment. However, this data revolution also poses significant privacy risks. Even when sensitive attributes are not directly disclosed, adversaries can exploit statistical queries to reconstruct private information about individuals.
+Data-driven healthcare systems have created new opportunities for medical research and personalized treatment. However, these systems also pose significant privacy risks. Even when sensitive attributes are not directly disclosed, adversaries can exploit statistical queries to reconstruct private information about individuals.
 
 This report examines reconstruction attacks, which are a class of privacy attacks where an adversary uses multiple statistical queries to infer sensitive attributes of individuals in a dataset. We focus on a healthcare scenario where an attacker attempts to reconstruct medical test results (normal vs. abnormal) using only aggregate queries over public demographic attributes.
 
@@ -91,7 +91,7 @@ Additionally, we analyze Membership Inference Attacks (MIAs) from a Bayesian per
 This work makes the following contributions:
 
 \begin{itemize}[leftmargin=*]
-    \item Comprehensive empirical evaluation of reconstruction attacks across 100 parameter settings per defense mechanism
+    \item Empirical evaluation of reconstruction attacks across 100 parameter settings per defense mechanism
     \item Identification of precise transition points where defenses become effective
     \item Comparative analysis revealing Gaussian noise as the optimal defense strategy
     \item Demonstration that subsampling alone is insufficient for privacy protection
@@ -145,7 +145,7 @@ The dataset contains 65 normal results (65\%) and 35 abnormal results (35\%), yi
 
 \subsubsection{Data and Code Sources}
 
-The synthetic healthcare dataset used in this study was obtained from the OpenDP CS208 course repository\footnote{\url{https://github.com/opendp/cs208/blob/main/spring2025/data/fake_healthcare_dataset_sample100.csv}}. The initial implementation framework was adapted from the course's problem set starter code\footnote{\url{https://github.com/opendp/cs208/blob/main/spring2025/homeworks/ps2/ps2_starter.py}}, which was subsequently extended to include the defense mechanisms, experimental framework, and comprehensive evaluation metrics presented in this report.
+The synthetic healthcare dataset used in this study was obtained from the OpenDP CS208 course repository\footnote{\url{https://github.com/opendp/cs208/blob/main/spring2025/data/fake_healthcare_dataset_sample100.csv}}. The initial implementation framework was adapted from the course's problem set starter code\footnote{\url{https://github.com/opendp/cs208/blob/main/spring2025/homeworks/ps2/ps2_starter.py}}, which was extended to include the defense mechanisms, experimental framework, and evaluation metrics presented in this report.
 
 
 \subsection{Attack Model}
@@ -217,7 +217,7 @@ where $S_t$ is a uniformly random subset of size $t$.
 
 \subsubsection{Parameter Ranges}
 
-To comprehensively evaluate each defense, we test the full range of integer parameters from 1 to 100:
+To evaluate each defense, we test the full range of integer parameters from 1 to 100:
 
 \begin{itemize}[leftmargin=*]
     \item \textbf{Rounding:} $R \in \{1, 2, 3, \ldots, 100\}$
@@ -294,7 +294,7 @@ Table~\ref{tab:rounding} summarizes the performance of the rounding defense acro
 \textbf{Key Findings:}
 
 \begin{itemize}[leftmargin=*]
-    \item \textbf{Transition Point:} $R = 5$ is the critical threshold where reconstruction success drops to 60.6\%, falling below the majority baseline
+    \item \textbf{Transition Point:} $R = 5$ is the threshold where reconstruction success drops to 60.6\%, falling below the majority baseline
     \item \textbf{Sharp Transition:} Success rate drops from 66.6\% at $R=4$ to 60.6\% at $R=5$, indicating a relatively sharp phase transition
     \item \textbf{Utility Cost:} At the transition point, RMSE is only 1.20, representing minimal distortion
     \item \textbf{Discrete Behavior:} Both RMSE and success rate exhibit step-like patterns due to the discrete nature of rounding
@@ -331,7 +331,7 @@ Table~\ref{tab:noise} presents the performance of the Gaussian noise defense.
     \item \textbf{Sharpest Transition:} The defense exhibits the most extreme phase transition among all three mechanisms
     \item \textbf{Excellent Trade-off:} At $\sigma = 2$, RMSE is only 1.99 while providing strong privacy protection
     \item \textbf{Linear RMSE Growth:} RMSE increases approximately linearly with $\sigma$, making utility costs predictable
-    \item \textbf{Diminishing Returns:} Success rate plateaus around 51\% for large $\sigma$, suggesting fundamental limits
+    \item \textbf{Diminishing Returns:} Success rate plateaus around 51\% for large $\sigma$, suggesting a lower limit
 \end{itemize}
 
 \textbf{Interpretation:} Gaussian noise emerges as the most effective defense, offering the best privacy-utility trade-off. Even minimal noise ($\sigma = 2$) significantly degrades attack performance while maintaining reasonable query accuracy.
@@ -347,39 +347,39 @@ Table~\ref{tab:subsampling} shows the performance of the subsampling defense.
 \begin{tabular}{@{}cccc@{}}
 \toprule
 \textbf{Parameter $t$} & \textbf{RMSE} & \textbf{Success Rate} & \textbf{Status} \\ \midrule
-1 & 21.88 & 0.647 & Attack succeeds \\
-6 & 12.89 & 0.556 & Attack fails \\
-11 & 10.09 & 0.576 & Attack fails \\
-21 & 6.72 & 0.593 & Attack fails \\
-51 & 3.58 & 0.740 & Attack succeeds \\
-71 & 2.35 & 0.824 & Attack succeeds \\
-81 & 1.71 & 0.876 & Attack succeeds \\
-91 & 1.00 & 0.944 & Attack succeeds \\
-\textbf{96} & \textbf{0.72} & \textbf{0.975} & \textbf{No defense} \\ \bottomrule
+1 & 22.42 & 0.655 & Attack succeeds \\
+5 & 8.65 & 0.658 & Attack succeeds \\
+10 & 6.90 & 0.681 & Attack succeeds \\
+20 & 4.85 & 0.716 & Attack succeeds \\
+50 & 2.05 & 0.801 & Attack succeeds \\
+75 & 1.10 & 0.883 & Attack succeeds \\
+90 & 0.67 & 0.929 & Attack succeeds \\
+95 & 0.44 & 0.951 & Attack succeeds \\
+\textbf{100} & \textbf{0.00} & \textbf{0.962} & \textbf{No defense} \\ \bottomrule
 \end{tabular}
 \end{table}
 
 \textbf{Key Findings:}
 
 \begin{itemize}[leftmargin=*]
-    \item \textbf{Paradoxical Behavior:} Subsampling shows effective protection for small $t$ values ($t \leq 21$), with success rates below the 65\% baseline
-    \item \textbf{Success Rate Increases with $t$:} As $t$ increases, success rate rises from 64.7\% at $t=1$ to 97.5\% at $t=96$
-    \item \textbf{Extreme Utility Cost:} Small $t$ values produce massive RMSE (21.88 at $t=1$), making the data nearly unusable despite providing privacy
-    \item \textbf{Poor Privacy-Utility Trade-off:} Cannot achieve both good privacy and good utility simultaneously---must choose one or the other
+    \item \textbf{No Privacy Protection:} Subsampling fails to prevent the attack across the entire parameter range. All success rates remain at or above the 65\% baseline
+    \item \textbf{Success Rate Increases with $t$:} As $t$ increases, success rate rises from 65.5\% at $t=1$ to 96.2\% at $t=100$
+    \item \textbf{Extreme Utility Cost at Small $t$:} Small $t$ values produce massive RMSE (22.42 at $t=1$), making the data nearly unusable
+    \item \textbf{Complete Failure as Defense:} Even at the most extreme setting ($t=1$), reconstruction success remains above baseline, indicating the defense is completely ineffective
 \end{itemize}
 
-\textbf{Interpretation:} Subsampling exhibits a paradoxical privacy-utility trade-off. While small $t$ values (e.g., $t \leq 21$) do prevent reconstruction (success below baseline), they introduce catastrophic variance (RMSE $> 6$), making query answers unreliable for practical use. Larger $t$ values provide acceptable utility but offer no privacy protection. Unlike noise and rounding, subsampling cannot achieve meaningful privacy with acceptable utility simultaneously.
+\textbf{Interpretation:} Subsampling is ineffective as a privacy defense in this setting. Even with extreme subsampling ($t=1$), the attack succeeds at 65.5\%, above the 65\% majority baseline. As $t$ increases, utility improves but privacy protection remains absent. Unlike noise and rounding, which create barriers to reconstruction, subsampling only introduces variance that does not prevent the attack from succeeding.
 
 \subsection{Comparative Analysis}
 
-The following sections provide a comprehensive comparison of all three defense mechanisms based on their effectiveness, privacy-utility trade-offs, and practical applicability.
+The following sections compare all three defense mechanisms based on their effectiveness, privacy-utility trade-offs, and practical applicability.
 
 \subsubsection{Defense Effectiveness Ranking}
 
 \begin{enumerate}[leftmargin=*]
     \item \textbf{Gaussian Noise} ($\sigma^* = 2$): Strongest protection with best trade-off. Success drops to 59.8\%, RMSE = 1.99
     \item \textbf{Rounding} ($R^* = 5$): Moderate protection with excellent utility. Success drops to 60.6\%, RMSE = 1.20
-    \item \textbf{Subsampling}: Technically can provide protection (at $t \leq 21$: success below 65\% baseline) but at catastrophic utility cost (RMSE = 6.72 at $t=21$). No practical parameter value achieves both privacy and utility
+    \item \textbf{Subsampling}: Completely ineffective. All parameter values fail to prevent the attack (success $\geq$ 65\% baseline across entire range from $t=1$ to $t=100$)
 \end{enumerate}
 
 \subsubsection{Privacy-Utility Trade-offs}
@@ -387,7 +387,7 @@ The following sections provide a comprehensive comparison of all three defense m
 \begin{itemize}[leftmargin=*]
     \item \textbf{Rounding:} Offers the best utility (lowest RMSE = 1.20) at the transition point, but provides weaker privacy than noise
     \item \textbf{Gaussian Noise:} Provides the strongest privacy with acceptable utility cost (RMSE = 1.99)
-    \item \textbf{Subsampling:} Can provide privacy but only at unacceptable utility costs. Exhibits poor trade-off where privacy and utility cannot both be satisfied
+    \item \textbf{Subsampling:} Provides no privacy protection at any parameter value. Even at extreme settings ($t=1$, RMSE=22.42), attack success remains above baseline
 \end{itemize}
 
 Figure~\ref{fig:tradeoff_comparison} illustrates the privacy-utility trade-offs for all three defense mechanisms, showing the relationship between reconstruction success rate (privacy) and RMSE (utility) across different parameter values.
@@ -422,7 +422,7 @@ Based on our empirical findings:
 \begin{itemize}[leftmargin=*]
     \item \textbf{Recommended:} Use Gaussian noise with $\sigma \geq 2$ for effective privacy protection with minimal utility loss (RMSE $\approx$ 2)
     \item \textbf{Alternative:} Use rounding with $R \geq 5$ when deterministic answers are required, offering slightly better utility (RMSE $\approx$ 1.2)
-    \item \textbf{Avoid:} Do not use subsampling as a standalone privacy defense. While it can technically prevent attacks at small $t$, the utility cost (RMSE $> 6$) makes the data practically unusable
+    \item \textbf{Avoid:} Do not use subsampling as a standalone privacy defense. It provides no protection against reconstruction attacks at any parameter setting
 \end{itemize}
 
 \section{Bayesian Interpretation of Membership Inference Attacks}
@@ -511,9 +511,9 @@ Our results demonstrate that reconstruction attacks pose a serious threat to pri
 The effectiveness of defenses varies:
 
 \begin{itemize}[leftmargin=*]
-    \item \textbf{Gaussian noise} provides strong protection with minimal utility loss, making it the preferred choice for most applications
+    \item \textbf{Gaussian noise} provides strong protection with minimal utility loss, making it a good choice for most applications
     \item \textbf{Rounding} offers an alternative with slightly better utility but weaker privacy
-    \item \textbf{Subsampling} is ineffective as a standalone defense and should not be relied upon for privacy protection
+    \item \textbf{Subsampling} is ineffective as a standalone defense in this setting and should not be relied upon for privacy protection
 \end{itemize}
 
 \subsection{Limitations}
@@ -529,7 +529,7 @@ Our study has several limitations:
     
     \item \textbf{Single Defense:} We evaluate defenses in isolation. Combining multiple defenses (e.g., noise + rounding) may provide stronger protection.
     
-    \item \textbf{Optimization Method:} Our attack uses least-squares optimization. More sophisticated attack algorithms might achieve higher success rates.
+    \item \textbf{Optimization Method:} Our attack uses least-squares optimization. Other attack algorithms might achieve higher success rates.
 \end{enumerate}
 
 \subsection{Future Work}
@@ -547,7 +547,7 @@ Several directions warrant further investigation:
 
 \section{Conclusion}
 
-This report presents a comprehensive empirical evaluation of reconstruction attacks and privacy defenses on healthcare data. Our key findings are:
+This report presents an empirical evaluation of reconstruction attacks and privacy defenses on healthcare data. Our key findings are:
 
 \begin{enumerate}[leftmargin=*]
     \item Reconstruction attacks are highly effective, achieving 96.7\% accuracy with 200 queries on undefended data
@@ -556,14 +556,14 @@ This report presents a comprehensive empirical evaluation of reconstruction atta
     
     \item Rounding offers moderate protection at $R = 5$ with better utility (RMSE = 1.20) but weaker privacy than noise
     
-    \item Subsampling is fundamentally ineffective as a standalone defense, failing to prevent attacks across all parameter values
+    \item Subsampling is ineffective as a privacy defense in this setting, failing to prevent attacks across all parameter values from $t=1$ to $t=100$
     
     \item From a Bayesian perspective, small false positive rates are critical for reliable membership inference, regardless of true positive rates
 \end{enumerate}
 
-These results underscore the importance of carefully designed privacy defenses in systems that release statistical information. Organizations handling sensitive data should implement robust protections, particularly Gaussian noise or rounding, to prevent reconstruction attacks while maintaining data utility for legitimate analyses.
+These results show the importance of carefully designed privacy defenses in systems that release statistical information. Organizations handling sensitive data should implement strong protections, particularly Gaussian noise or rounding, to prevent reconstruction attacks while maintaining data utility for legitimate analyses.
 
-The tension between privacy and utility is fundamental and unavoidable. However, our findings demonstrate that with appropriate defenses and parameter choices, it is possible to achieve meaningful privacy protection with acceptable utility costs. As data-driven systems become increasingly prevalent in healthcare and other sensitive domains, such privacy-preserving mechanisms will be essential for maintaining public trust and protecting individual rights.
+The tension between privacy and utility is unavoidable. However, our findings show that with appropriate defenses and parameter choices, it is possible to achieve meaningful privacy protection with acceptable utility costs. As data-driven systems become more common in healthcare and other sensitive domains, such privacy-preserving mechanisms will be important for maintaining public trust and protecting individual rights.
 
 \section*{Tools and Software}
 
