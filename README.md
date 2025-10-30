@@ -46,7 +46,7 @@ Answer = Σ result_i  (for all i where q(i) = True)
 3. Use optimization to solve for the sensitive binary vector
 4. Threshold the solution at 0.5 to obtain binary predictions
 
-**Implementation:** The `reconstruction_attack()` function in `ps2_starter.py` uses least-squares optimization with CPLEX (when available) or falls back to standard least-squares regression.
+**Implementation:** The `reconstruction_attack()` function in `ps2_starter.py` uses least-squares optimization to solve the reconstruction problem.
 
 ### Defense Mechanisms
 
@@ -298,7 +298,7 @@ python run_experiments.py
 
 - Course materials: CS5510 Data Privacy and Security
 - Dataset: Synthetic healthcare data (100 patients)
-- Optimization: CPLEX (docplex) with least-squares fallback
+- Optimization: NumPy least-squares solver
 - Visualization: matplotlib
 
 ---
