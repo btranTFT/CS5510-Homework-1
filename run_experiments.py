@@ -1,5 +1,5 @@
 """
-CS5510 Homework 1 - Reconstruction Attack Experiments
+CS 5510 Homework 1 - Reconstruction Attack Experiments
 """
 
 import numpy as np
@@ -12,14 +12,14 @@ from ps2_starter import (
     reconstruction_attack, rmse, success_rate
 )
 
-# Load data
+# Data load 
 print("Loading dataset...")
 data = load_data("fake_healthcare_dataset_sample100.csv")
 n = len(data)
 print(f"Dataset: {n} patients")
 print(f"Target distribution: {(data[SENSITIVE]==1).sum()} abnormal, {(data[SENSITIVE]==0).sum()} normal")
 
-# Compute majority baseline
+# Majority baseline computation
 p_majority = max((data[SENSITIVE]==0).sum(), (data[SENSITIVE]==1).sum()) / n
 print(f"Majority baseline: {p_majority:.3f}\n")
 
@@ -91,7 +91,7 @@ def run_experiments(defense_type, param_range, num_trials=10):
     
     return pd.DataFrame(results)
 
-# Define parameter ranges - full sweep from 1 to n as per assignment spec
+# Parameter ranges - full sweep from 1 to n
 param_range = list(range(1, n + 1))
 
 # Run experiments for each defense
@@ -130,7 +130,7 @@ summary_compact = pd.DataFrame([
 ])
 summary_compact.to_csv('reconstruction_defense_summary_compact.csv', index=False)
 
-# Full summary - attack_failed means success is strictly at or below majority baseline (no fudge factor)
+# Full summary
 full_data = []
 for defense, df in [('round', results_round), ('noise', results_noise), ('sample', results_sample)]:
     for _, row in df.iterrows():
