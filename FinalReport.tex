@@ -177,7 +177,7 @@ Our reconstruction attack proceeds as follows:
     \item \textbf{Thresholding:} Round the continuous solution to binary values using threshold 0.5
 \end{enumerate}
 
-The implementation uses CPLEX optimization when available, falling back to standard least-squares regression otherwise.
+The implementation uses least-squares regression to solve the optimization problem.
 
 \subsection{Defense Mechanisms}
 
@@ -574,10 +574,8 @@ This project utilized the following tools and software packages:
 \textbf{Implementation and Analysis:}
 \begin{itemize}[leftmargin=*]
     \item \textbf{Python 3.x}: Primary programming language for implementation
-    \item \textbf{NumPy}: Numerical computing and matrix operations
+    \item \textbf{NumPy}: Numerical computing, matrix operations, and least-squares optimization
     \item \textbf{Pandas}: Data manipulation and analysis
-    \item \textbf{CPLEX (docplex)}: Optimization solver for reconstruction attack
-    \item \textbf{scikit-learn}: Machine learning utilities and least-squares optimization
 \end{itemize}
 
 \textbf{Visualization:}
@@ -593,6 +591,6 @@ This project utilized the following tools and software packages:
 
 \section*{Acknowledgments}
 
-This work was completed as part of CS5510 Data Privacy and Security. The implementation uses the CPLEX optimization library (docplex) and standard Python scientific computing packages (NumPy, Pandas, Matplotlib).
+This work was completed as part of CS5510 Data Privacy and Security. The implementation uses standard Python scientific computing packages (NumPy, Pandas, Matplotlib).
 
 \end{document}
